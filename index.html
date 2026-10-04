@@ -27,13 +27,13 @@
 <section class="section faq" id="faq"><div class="wrap faq-layout"><div><div class="eyebrow">GOOD QUESTIONS.</div><h2>STRAIGHT ANSWERS.</h2><p class="sub">Everything to know before your first burn.</p></div><div><details><summary>What do I receive?</summary><p>A Social Bundle for your launchpad AI character generations, containing one email account and associated X / Twitter, TikTok, and Instagram accounts. You supply the character; $SOCIALGEN supplies the Social Bundle.</p></details><details><summary>Does $SOCIALGEN generate my AI character?</summary><p>You create your AI character through your chosen launchpad or creative tool. $SOCIALGEN is for redeeming its Social Bundle. Character generation, content creation, and automated posting are not included.</p></details><details><summary>How much does it cost?</summary><p>1,000 $SOCIALGEN plus a separate fixed <span data-fee>0.05 SOL</span> service fee. The service fee is separate from the token burn. Solana network fees are additional.</p></details><details><summary>Are the tokens actually burned?</summary><p>The required 1,000 $SOCIALGEN is permanently burned. Every completed burn is recorded on Solana and appears in the burn feed.</p></details><details><summary>Why is there a 0.05 SOL fee?</summary><p>The <span data-fee>0.05 SOL</span> is a service/redemption fee. It is separate from the $SOCIALGEN token burn.</p></details><details><summary>Can I change the usernames?</summary><p>Username changes depend on availability and the rules of each respective platform. All accounts and their use must comply with those platform rules.</p></details><details><summary>When do I receive my bundle?</summary><p>After the required blockchain transactions and provisioning have been successfully confirmed.</p></details><details><summary>What blockchain is $SOCIALGEN on?</summary><p>Solana.</p></details><details><summary>What is the contract address?</summary><p id="faq-ca">CA COMING SOON</p></details></div></div></section>
 </main>
 <footer><div class="wrap"><div class="footer-top"><div><a class="brand" href="#home"><i class="mark" aria-hidden="true"></i><em>$</em>SOCIALGEN</a><p>Burn. Redeem. Get Social.</p><p>Social Bundles for your launchpad AI character generations.</p></div><div class="footer-links"><a href="#home">Home</a><a href="#redeem">Redeem</a><a href="#burns">Live Burns</a><a href="#how-it-works">How It Works</a><a href="#faq">FAQ</a></div></div><div class="footer-bottom"><span>© <span id="year">2026</span> $SOCIALGEN</span><span>Always verify wallet transactions before signing them.</span><span>SOLANA NATIVE ↗</span></div></div></footer>
-<dialog id="wallet-dialog" aria-labelledby="wallet-title"><button class="close" aria-label="Close wallet dialog">×</button><div class="eyebrow">YOUR WALLET. YOUR CONTROL.</div><h3 id="wallet-title" style="margin-top:14px">Connect your wallet</h3><p id="wallet-copy">Choose a Solana wallet to get started.</p><div id="wallet-options"><button class="btn full wallet-option" data-wallet="phantom">◉ &nbsp; Phantom <span>↗</span></button><button class="btn full wallet-option" data-wallet="solflare">☀ &nbsp; Solflare <span>↗</span></button></div><div id="wallet-connected" hidden><div class="result"><div class="row"><span>$SOCIALGEN</span><b id="wallet-token-value">10,000 $SOCIALGEN</b></div><div class="row"><span>SOL</span><b id="wallet-sol-value">1.00 SOL</b></div></div><button class="btn full" id="disconnect">Disconnect Wallet</button></div><p class="fine">Your keys stay in your wallet.</p></dialog>
+<dialog id="wallet-dialog" aria-labelledby="wallet-title"><button class="close" aria-label="Close wallet dialog">×</button><div class="eyebrow">YOUR WALLET. YOUR CONTROL.</div><h3 id="wallet-title" style="margin-top:14px">Connect your wallet</h3><p id="wallet-copy">Choose a Solana wallet to get started.</p><div id="wallet-options"><button class="btn full wallet-option" data-wallet="phantom">◉ &nbsp; Phantom <span>↗</span></button><button class="btn full wallet-option" data-wallet="solflare">☀ &nbsp; Solflare <span>↗</span></button></div><div id="wallet-connected" hidden><div class="result"><div class="row"><span>$SOCIALGEN</span><b id="wallet-token-value">—</b></div><div class="row"><span>SOL</span><b id="wallet-sol-value">—</b></div></div><button class="btn full" id="disconnect">Disconnect Wallet</button></div><p class="fine">Your keys stay in your wallet.</p></dialog>
 <dialog id="redeem-dialog" aria-labelledby="redemption-title"><button class="close" aria-label="Close redemption dialog">×</button><div class="eyebrow">YOUR NEXT SOCIAL CHAPTER</div><h3 id="redemption-title" style="margin-top:14px">Review your redemption</h3><div class="result"><div class="row"><span>Token burn</span><b>1,000 $SOCIALGEN</b></div><div class="row"><span>Service fee</span><b>0.05 SOL</b></div><div class="row"><span>You receive</span><b>1 Social Bundle</b></div></div><p class="fine">Solana network fees are additional.</p><p id="redemption-message" class="status" role="status"></p><button class="btn primary full" id="confirm-redemption">Confirm Burn &amp; Redeem ↗</button><div id="redemption-progress" hidden><div class="progress-step"><i></i><span>1,000 $SOCIALGEN burned</span></div><div class="progress-step"><i></i><span>0.05 SOL fee confirmed</span></div><div class="progress-step"><i></i><span>Social Bundle prepared</span></div></div></dialog>
 <dialog id="receipt-dialog" aria-labelledby="receipt-title"><button class="close" aria-label="Close receipt">×</button><div class="eyebrow">BURN RECEIPT</div><h3 id="receipt-title" style="margin-top:14px">Burn complete <span style="color:#b5ebd0">✓</span></h3><div class="result"><div class="row"><span>Wallet</span><b id="receipt-wallet"></b></div><div class="row"><span>Burned</span><b>1,000 $SOCIALGEN</b></div><div class="row"><span>Service fee</span><b>0.05 SOL</b></div><div class="row"><span>Time</span><b id="receipt-time"></b></div></div><p class="fine">1,000 tokens removed from circulation.</p></dialog>
 <script>'use strict';
 // ==================== CONFIGURATION ====================
 // Private interactive UI prototype requested by the owner. All data is illustrative.
-// No wallet providers, RPC calls, payments, account provisioning, or real secrets.
+// Wallet connection is real. Redemption presentation stays local; no RPC payments, provisioning, or secrets.
 // Do not publish this file as a functioning service. Previous payment version is retained in file history.
 const CONFIG = {
     TOKEN_NAME: "$SOCIALGEN",
@@ -45,28 +45,60 @@ const CONFIG = {
 };
 const $=id=>document.getElementById(id);
 let connected=false,working=false,redeemed=false;
-const initialBurns=128,initialRedeemed=126;
+const initialBurns=0,initialRedeemed=0;
 let totalBurns=initialBurns,totalRedeemed=initialRedeemed;
-const activity=[{who:'Wallet 128',age:'12s ago'},{who:'Wallet 127',age:'48s ago'},{who:'Wallet 126',age:'2m ago'},{who:'Wallet 125',age:'4m ago'},{who:'Wallet 124',age:'7m ago'}];
+const activity=[];
 const walletDialog=$('wallet-dialog'),redeemDialog=$('redeem-dialog'),receiptDialog=$('receipt-dialog');
 const delay=ms=>new Promise(resolve=>setTimeout(resolve,ms));
 // ==================== WALLET INTEGRATION ====================
-// Local presentation state only. Replace with real Wallet Standard connection.
+// Real injected Phantom/Solflare connection. No signing or payment is requested.
+// Use HTTPS; on phones open the site inside the wallet's in-app browser.
+let activeProvider=null,activeAddress='',removeWalletListeners=null;
 function updateButtons(){
- document.querySelectorAll('[data-connect]').forEach(b=>b.textContent=connected?'My Wallet ↗':'Connect Wallet ↗');
+ document.querySelectorAll('[data-connect]').forEach(b=>{b.textContent=connected?'My Wallet ↗':'Connect Wallet ↗';b.title=connected?activeAddress:'';});
  $('redeem-button').textContent=redeemed?'View Your Social Bundle ↗':connected?'Burn & Redeem ↗':'Connect Wallet to Redeem ↗';
  $('wallet-balance').hidden=!connected;
 }
-function openWallet(){
+function refreshWallet(){
  $('wallet-title').textContent=connected?'Your wallet':'Connect your wallet';
- $('wallet-copy').textContent=connected?'Your wallet is ready. Review your balance below.':'Choose a Solana wallet to get started.';
- $('wallet-options').hidden=connected;$('wallet-connected').hidden=!connected;walletDialog.showModal();
+ $('wallet-copy').textContent=connected?activeAddress:'Choose a Solana wallet to get started.';
+ $('wallet-copy').style.overflowWrap='anywhere';
+ $('wallet-options').hidden=connected;$('wallet-connected').hidden=!connected;
+ // Never show the prototype's invented balances for a real connected wallet.
+ $('wallet-token-value').textContent='—';$('wallet-sol-value').textContent='—';
 }
+function openWallet(){refreshWallet();walletDialog.showModal();}
+function clearConnection(){if(removeWalletListeners)removeWalletListeners();removeWalletListeners=null;activeProvider=null;activeAddress='';connected=false;updateButtons();refreshWallet();}
 document.querySelectorAll('[data-connect]').forEach(b=>b.addEventListener('click',openWallet));
 document.querySelectorAll('[data-wallet]').forEach(b=>b.addEventListener('click',async()=>{
- if(working)return;working=true;const label=b.textContent;b.textContent='Connecting…';b.disabled=true;await delay(550);connected=true;updateButtons();walletDialog.close();b.textContent=label;b.disabled=false;working=false;
+ if(working)return;
+ const type=b.dataset.wallet;
+ const provider=type==='phantom'?(window.phantom?.solana || (window.solana?.isPhantom?window.solana:null)):window.solflare;
+ if(!provider || typeof provider.connect!=='function'){
+  $('wallet-copy').textContent='Wallet not detected. Install or unlock '+(type==='phantom'?'Phantom':'Solflare')+' and reload. On mobile, open this site inside that wallet’s browser.';return;
+ }
+ if(location.protocol!=='https:' && location.hostname!=='localhost'){$('wallet-copy').textContent='Open the deployed HTTPS site to connect your wallet.';return;}
+ working=true;const label=b.textContent;b.textContent='Connecting…';b.disabled=true;
+ try{
+  await provider.connect();
+  const address=provider.publicKey?.toString();
+  if(!address || !/^[1-9A-HJ-NP-Za-km-z]{32,44}$/.test(address))throw Error('The wallet did not return a connected Solana account.');
+  if(removeWalletListeners)removeWalletListeners();
+  activeProvider=provider;activeAddress=address;connected=true;
+  const accountChanged=key=>{if(!key){clearConnection();return;}activeAddress=key.toString();connected=true;updateButtons();refreshWallet();};
+  const disconnected=()=>clearConnection();
+  provider.on?.('accountChanged',accountChanged);provider.on?.('disconnect',disconnected);
+  removeWalletListeners=()=>{provider.removeListener?.('accountChanged',accountChanged);provider.removeListener?.('disconnect',disconnected);};
+  updateButtons();refreshWallet();walletDialog.close();
+ }catch(error){$('wallet-copy').textContent=error.code===4001?'Connection declined. No wallet was connected.':(error.message||'Could not connect. Please try again.');}
+ finally{b.textContent=label;b.disabled=false;working=false;}
 }));
-$('disconnect').addEventListener('click',()=>{connected=false;updateButtons();walletDialog.close();});
+$('disconnect').addEventListener('click',async()=>{
+ if(working)return;working=true;
+ try{await activeProvider?.disconnect();clearConnection();walletDialog.close();}
+ catch(error){$('wallet-copy').textContent='Could not disconnect. Disconnect this site from your wallet settings.';}
+ finally{working=false;}
+});
 function openRedemption(){if(working)return;if(!connected){openWallet();return;}if(redeemed){$('bundle-access').scrollIntoView({behavior:'smooth',block:'center'});return;}
  $('confirm-redemption').hidden=false;$('redemption-progress').hidden=true;$('redemption-message').textContent='Review your redemption. Your bundle will be prepared after confirmation.';redeemDialog.showModal();
 }
@@ -89,7 +121,7 @@ $('confirm-redemption').addEventListener('click',async()=>{
  totalRedeemed++;redeemed=true;renderBurns();updateButtons();
  document.querySelectorAll('.progress-step').forEach(s=>{s.classList.remove('active');s.classList.add('done');});
  $('redemption-message').textContent='Your Social Bundle is ready.';
- $('wallet-token-value').textContent='9,000 $SOCIALGEN';$('wallet-sol-value').textContent='0.95 SOL';
+ // Real wallet balances are not modified by the local redemption presentation.
  $('bundle-access').hidden=false;await delay(450);working=false;redeemDialog.close();$('bundle-access').scrollIntoView({behavior:'smooth',block:'center'});
 });
 // ==================== LIVE BURN DATA ====================
@@ -97,7 +129,7 @@ $('confirm-redemption').addEventListener('click',async()=>{
 // blockchain addresses or signatures, and no links to nonexistent transactions.
 function renderBurns(){
  $('total-burned').textContent=(totalBurns*CONFIG.BURN_AMOUNT).toLocaleString('en-US');$('total-burns').textContent=totalBurns;$('total-redeemed').textContent=totalRedeemed;
- $('empty').hidden=true;$('burn-feed').replaceChildren();
+ $('empty').hidden=activity.length>0;$('burn-feed').replaceChildren();
  activity.slice(0,6).forEach((item,index)=>{
   const row=document.createElement('div');row.className='burn-row';row.setAttribute('role','listitem');
   const labels=['WALLET','$SOCIALGEN BURNED','SOL FEE','TIME','TRANSACTION'];
